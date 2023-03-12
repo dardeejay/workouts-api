@@ -12,10 +12,12 @@ const app = express()
 app.use(express.json())
 
 var corsOption = {
-    origin: 'https://frontend-dardeejay.vercel.app/',
+    origin: 'https://frontend-dardeejay.vercel.app',
+    optionsSuccessStatus: 200
 }
 
 app.use(cors(corsOption))
+
 app.use((req, res, next)=>{
     console.log(req.path,req.method)  
     next()
