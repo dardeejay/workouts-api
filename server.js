@@ -1,42 +1,43 @@
-require('dotenv').config()
-const express = require('express')
-const workoutRoutes = require('./routes/workout')
-const mongoose = require('mongoose')
-const cors = require('cors')
-const port = 4000
+require("dotenv").config();
+const express = require("express");
+const workoutRoutes = require("./routes/workout");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const port = 4000;
 
 // express app
-const app = express()
+const app = express();
 
 // middleware
-app.use(express.json())
+app.use(express.json());
 
-var corsOption = {
-    origin: 'https://frontend-dardeejay.vercel.app',
-    optionsSuccessStatus: 200
-}
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://frontend-dardeejay.vercel.app",
+];
 
-app.use(cors(corsOption))
+app.use(cors({ origin: allowedOrigins }));
 
-app.use((req, res, next)=>{
-    console.log(req.path,req.method)  
-    next()
-})
+app.use((req, res, next) => {
+  console.log(req.path, req.method);
+  next();
+});
 
-
-app.use('/api/workouts', workoutRoutes)
+app.use("/api/workouts", workoutRoutes);
 
 // connect to db
 
-mongoose.connect(process.env.MONGO_URI)
-.then(()=>{
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
     // listen for request
-    app.listen(process.env.PORT || port, ()=>{
-        console.log('connected to db * listening on port 4000!!', process.env.PORT)
-    } )
-})
-.catch((err)=>{
-    console.log(err)
-})
-
-
+    app.listen(process.env.PORT || port, () => {
+      console.log(
+        "connected to db * listening on port 4000!!",
+        process.env.PORT
+      );
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });

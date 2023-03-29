@@ -1,93 +1,98 @@
-const Workout = require('../models/workoutModel')
-const mongoose = require('mongoose')
+const Workout = require("../models/workoutModel");
+const mongoose = require("mongoose");
 
 // get all workouts
-const getWorkouts = async (req,res) =>{
-    try{
-        const workouts = await Workout.find({}).sort({createdAt: -1})
-        res.status(200).json(workouts)
-    }catch(err){
-        res.status(400).json({error: err.message})
-    }
-}
+const getWorkouts = async (req, res) => {
+  try {
+    const workouts = await Workout.find({}).sort({ createdAt: -1 });
+    res.status(200).json(workouts);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 
 //get a single workout
-const getWorkout = async(req,res) =>{
-    const {id} = req.params 
+const getWorkout = async (req, res) => {
+  const { id } = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(404).json({error: "Workout not found"})
-    }
-    const workout = await Workout.findById(id)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "Workout not found" });
+  }
+  const workout = await Workout.findById(id);
 
-    if(!workout){
-        return res.status(404).json({error: "Workout not found!"})
-    }
+  if (!workout) {
+    return res.status(404).json({ error: "Workout not found!" });
+  }
 
-    res.status(200).json(workout)
-}
-
+  res.status(200).json(workout);
+};
 
 //create new workout
-const createWorkout = async (req,res)=>{
-    const {title, load, reps} = req.body
+const createWorkout = async (req, res) => {
+  const { title, load, reps } = req.body;
 
-    let emptyFields = []
+  let emptyFields = [];
 
-    if(!title){
-        emptyFields.push("title")
-    }
-    if(!load){
-        emptyFields.push("load")
-    }
-    if(!reps){
-        emptyFields.push("reps")
-    }
+  if (!title) {
+    emptyFields.push("title");
+  }
+  if (!load) {
+    emptyFields.push("load");
+  }
+  if (!reps) {
+    emptyFields.push("reps");
+  }
 
-    if(emptyFields.length > 0){
-        return res.status(400).json({error: `The following fields are empty: ${emptyFields.join(", "), emptyFields}`})
-    }
-    try{
-        const workout = await Workout.create({title, load, reps})
-        res.status(200).json(workout)
-    }catch(err){
-        res.status(400).json({error: err.message})
-    }
-}
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "The following fields are empty:", emptyFields });
+  }
+  try {
+    const workout = await Workout.create({ title, load, reps });
+    res.status(200).json(workout);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 
 //delete a workout
-const deleteWorkout = async (req,res)=>{
-    const {id} = req.params 
+const deleteWorkout = async (req, res) => {
+  const { id } = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(404).json({error: "Workout not found"})
-    }
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "Workout not found" });
+  }
 
-    const workout = await Workout.findByIdAndDelete(id)
-    if(!workout){
-        return res.status(404).json({error: "Workout not found!"})
-    }
+  const workout = await Workout.findByIdAndDelete(id);
+  if (!workout) {
+    return res.status(404).json({ error: "Workout not found!" });
+  }
 
-    res.status(200).json(workout)
-
-}
+  res.status(200).json(workout);
+};
 
 // update a workout
-const updateWorkout = async (req,res)=>{
-    const {id} = req.params 
+const updateWorkout = async (req, res) => {
+  const { id } = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(404).json({error: "Workout not found"})
-    }
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "Workout not found" });
+  }
 
-    const workout = await Workout.findByIdAndUpdate(id, {...req.body})
+  const workout = await Workout.findByIdAndUpdate(id, { ...req.body });
 
-    if(!workout){
-        return res.status(404).json({error: "Workout not found!"})
-    }
-    
-    res.status(200).json(workout)
-    
-}
+  if (!workout) {
+    return res.status(404).json({ error: "Workout not found!" });
+  }
 
-module.exports = {createWorkout, getWorkouts, getWorkout, deleteWorkout, updateWorkout}
+  res.status(200).json(workout);
+};
+
+module.exports = {
+  createWorkout,
+  getWorkouts,
+  getWorkout,
+  deleteWorkout,
+  updateWorkout,
+};
